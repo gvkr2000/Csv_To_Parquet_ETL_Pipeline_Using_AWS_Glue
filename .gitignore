@@ -1,3 +1,6 @@
 .env
 __pycache__
 venv
+.idea
+temp_uploads
+temp_parquet
