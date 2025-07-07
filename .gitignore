@@ -4,3 +4,4 @@ venv
 .idea
 temp_uploads
 temp_parquet
+runtime_config.json

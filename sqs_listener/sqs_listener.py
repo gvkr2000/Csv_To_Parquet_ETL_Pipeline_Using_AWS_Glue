@@ -6,7 +6,7 @@ from utils.config import  DYNAMODB_TABLE, GLUE_JOB_NAME, S3_BUCKET, AWS_REGION
 from utils.config_loader import load_runtime_config
 
 config = load_runtime_config()
-SQS_QUEUE_URL = config["sqs_queue_url"]
+SQS_QUEUE_URL = config["SQS_QUEUE_URL"]
 
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
 
@@ -44,7 +44,6 @@ def process_s3_event(event):
 
         logging.info(f"[+] New file uploaded: s3://{s3_bucket}/{s3_key}")
 
-        # Store metadata
         dynamodb_client.put_item(
             TableName=DYNAMODB_TABLE,
             Item={
@@ -57,7 +56,7 @@ def process_s3_event(event):
 
         create_glue_job_if_not_exists()
 
-        # Trigger Glue job
+ 
         try:
             response = glue_client.start_job_run(
                 JobName=GLUE_JOB_NAME,

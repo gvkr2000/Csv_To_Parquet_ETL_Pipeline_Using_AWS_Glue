@@ -8,7 +8,7 @@ from utils.config import S3_BUCKET
 
 args = getResolvedOptions(sys.argv, ['JOB_NAME','s3_input','s3_output'])
 
-s3_input=f"s3://{S3_BUCKET}/input/competitors_raw_data.csv"
+s3_input=f"s3://{S3_BUCKET}/input/"
 s3_output=f"s3://{S3_BUCKET}/output/"
 sc=SparkContext()
 glueContext = GlueContext(sc)

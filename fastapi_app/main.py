@@ -3,7 +3,7 @@ from fastapi.responses import FileResponse
 import boto3
 import os
 import shutil
-from utils.config import S3_BUCKET, AWS_REGION, GLUE_JOB_NAME  # Make sure GLUE_JOB_NAME is defined in your config
+from utils.config import S3_BUCKET, AWS_REGION, GLUE_JOB_NAME  
 
 app = FastAPI()
 s3 = boto3.client("s3", region_name=AWS_REGION)
@@ -54,24 +54,23 @@ def trigger_glue_job(s3_input: str, s3_output: str):
 @app.post("/setup")
 def setup_resources():
     try:
-        # Create S3 bucket
+        
         s3.create_bucket(
-            Bucket=S3_BUCKET,
-            CreateBucketConfiguration={'LocationConstraint': AWS_REGION}
+            Bucket=S3_BUCKET
         )
     except s3.exceptions.BucketAlreadyOwnedByYou:
         pass
 
-    # Create SQS Queue
+  
     queue_name = "s3-event-queue"
     sqs_response = sqs.create_queue(QueueName=queue_name)
-    queue_url = sqs_response['QueueUrl']
+    queue_url =  sqs.get_queue_url(queue_name)
     queue_arn = sqs.get_queue_attributes(
         QueueUrl=queue_url,
         AttributeNames=['QueueArn']
     )['Attributes']['QueueArn']
 
-    # Configure S3 to send events to SQS
+    
     s3.put_bucket_notification_configuration(
         Bucket=S3_BUCKET,
         NotificationConfiguration={
